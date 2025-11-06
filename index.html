@@ -1,160 +1,74 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ribrik PWA</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="dist/css/style.css">
-  <meta name="theme-color" content="#ff007f">
-  <link rel="icon" href="images/icon-192.png">
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="dist/css/style.css" />
+  <meta name="theme-color" content="#ff007f" />
+  <link rel="icon" href="images/icon-192.png" />
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
-      color: #e0e0e0;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    h1 {
-      color: #ff007f;
-      font-size: 2.5em;
-      margin: 0;
-      text-shadow: 0 0 10px #ff007f;
-    }
-    main {
-      background: rgba(45, 45, 68, 0.8);
-      border: 2px solid #ff007f;
-      border-radius: 10px;
-      padding: 30px;
-      max-width: 500px;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
-    }
-    .game-container {
-      text-align: center;
-    }
-    .balance {
-      font-size: 2em;
-      color: #ff007f;
-      margin: 20px 0;
-      font-weight: bold;
-      text-shadow: 0 0 10px #ff007f;
-    }
-    .balance-label {
-      font-size: 1.1em;
-      color: #b0b0b0;
-      margin-bottom: 10px;
-    }
-    button {
-      background: linear-gradient(135deg, #ff007f, #ff4da6);
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.1em;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
-    }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 0, 127, 0.6);
-    }
-    button:active {
-      transform: translateY(0);
-    }
-    .result-message {
-      font-size: 1.2em;
-      margin-top: 20px;
-      min-height: 30px;
-      color: #a0d995;
-    }
-    .result-message.loss {
-      color: #ff6b6b;
-    }
-    footer {
-      margin-top: 40px;
-      text-align: center;
-      color: #808080;
-      font-size: 0.9em;
-    }
+    /* ... Din befintliga CSS här ... */
   </style>
 </head>
 <body>
-  <header>
-    <h1>Ribrik PWA Demo</h1>
-  </header>
-  <main>
-    <div class="game-container">
-      <div class="balance-label">Din Balans:</div>
-      <div class="balance" id="balanceDisplay">10</div>
-      <button onclick="playGame()">Spela!</button>
-      <div class="result-message" id="resultMessage"></div>
-    </div>
-  </main>
-  <footer>
-    <p>© 2025 Ribrik.github.io</p>
-  </footer>
+<header>
+  <h1>Ribrik PWA Demo</h1>
+</header>
+<main>
+  <button id="installButton" hidden>📲 Installera appen</button>
+  <div class="game-container">
+    <div class="balance-label">Din Balans:</div>
+    <div class="balance" id="balanceDisplay">10</div>
+    <button onclick="playGame()">Spela!</button>
+    <div class="result-message" id="resultMessage"></div>
+  </div>
+</main>
+<footer>
+  <p>© 2025 Ribrik.github.io</p>
+</footer>
 
-  <script>
-    let balance = 10;
+<script>
+  let balance = 10;
 
-    function playGame() {
-      const random = Math.random();
-      const resultMessageEl = document.getElementById('resultMessage');
-      
-      if (random < 0.5) {
-        // Win: +5
-        balance += 5;
-        resultMessageEl.textContent = '🎉 Du vann! +5';
-        resultMessageEl.classList.remove('loss');
-      } else {
-        // Loss: -3
-        balance -= 3;
-        resultMessageEl.textContent = '😢 Du förlorade -3';
-        resultMessageEl.classList.add('loss');
-      }
-      
-      // Update balance display
-      document.getElementById('balanceDisplay').textContent = balance;
+  function playGame() {
+    const random = Math.random();
+    const resultMessageEl = document.getElementById('resultMessage');
+    if (random < 0.5) {
+      balance += 5;
+      resultMessageEl.textContent = '🎉 Du vann! +5';
+      resultMessageEl.classList.remove('loss');
+    } else {
+      balance -= 3;
+      resultMessageEl.textContent = '😢 Du förlorade -3';
+      resultMessageEl.classList.add('loss');
     }
+    document.getElementById('balanceDisplay').textContent = balance;
+  }
 
-    // Service Worker registration
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registrerad.'))
-        .catch(err => console.log('Service Worker registrering misslyckades:', err));
-    }
+  // Service Worker registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registrerad.'))
+      .catch(err => console.log('Service Worker registrering misslyckades:', err));
+  }
 
-    // Install prompt
-    let deferredPrompt;
-    const installBtn = document.getElementById('installButton');
-    
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      if (installBtn) {
-        installBtn.hidden = false;
-        installBtn.addEventListener('click', async () => {
-          installBtn.hidden = true;
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          console.log(`Installationsval: ${outcome}`);
-          deferredPrompt = null;
-        });
-      }
-    });
-  </script>
+  // Install prompt
+  let deferredPrompt;
+  const installBtn = document.getElementById('installButton');
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.hidden = false;
+  });
+  installBtn.addEventListener('click', async () => {
+    installBtn.hidden = true;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Installationsval: ${outcome}`);
+    deferredPrompt = null;
+  });
+</script>
 </body>
 </html>
