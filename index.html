@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ribrik PWA</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="dist/css/style.css" />
+  <meta name="theme-color" content="#ff007f" />
+  <link rel="icon" href="images/icon-192.png" />
+</head>
+<body>
+  <header>
+    <h1>Ribrik PWA Demo</h1>
+  </header>
+  <main>
+    <p>En minimalistisk och professionell Progressive Web App med mörkt tema och neonrosa detaljer.</p>
+    <button id="installButton" hidden>📲 Installera appen</button>
+  </main>
+  <footer>
+    <p>© 2025 Ribrik.github.io</p>
+  </footer>
+  <script>
+    // --- Service Worker ---
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registrerad.'));
+    }
+    // --- Install prompt ---
+    let deferredPrompt;
+    const installBtn = document.getElementById('installButton');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.hidden = false;
+      installBtn.addEventListener('click', async () => {
+        installBtn.hidden = true;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`Installationsval: ${outcome}`);
+        deferredPrompt = null;
+      });
+    });
+  </script>
+</body>
+</html>
