@@ -1,0 +1,16 @@
+{
+  "name": "ribrik-pwa",
+  "version": "1.0.0",
+  "scripts": {
+    "sass": "sass src/sass:dist/css",
+    "lint": "stylelint 'dist/css/*.css'",
+    "test:a11y": "node tests/axe-test.js",
+    "test:e2e": "cypress run"
+  },
+  "devDependencies": {
+    "sass": "^1.80.0",
+    "stylelint": "^16.0.0",
+    "axe-core": "^4.8.0",
+    "cypress": "^13.0.0"
+  }
+}
